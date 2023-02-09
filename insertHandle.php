@@ -2,7 +2,6 @@
 if (isset($_POST['submit'])){
   require_once('handle.php');
   $sc=new handle();
-  
   $sc->setSku($_POST['sku']);
   $sc->setName($_POST['name']);
   $sc->setPrice($_POST['price']);
@@ -49,8 +48,7 @@ if (isset($_POST['submit'])){
   
 }
   $sc->insert();
-  
- }
+}
 
   
 ?>

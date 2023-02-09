@@ -2,13 +2,12 @@
  include 'connect.php';
 require_once('product.php');
 class handle extends con implements product{
-
   
 private $sku;
 private $name;
 private $price;
 private $productType;
-private $size;
+public $size;
 private $height;
 private $width;
 private $length;
@@ -20,7 +19,6 @@ public function setSku($sku){
 }
 public function getSku(){
  return $this->sku;
- 
 }
 
 public function setName($name){
@@ -36,6 +34,7 @@ public function setPrice($price){
 public function getPrice(){
   return $this->price;
 }
+
 public function setProductType($productType){
   $this->productType=$productType;
 }
@@ -44,6 +43,7 @@ public function getProductType(){
 }
 
 public function setSize($size){
+  
   $this->size=$size;
 }
 public function getSize(){
@@ -85,40 +85,40 @@ public function insert(){
 
   if(isset ($_POST['submit'])){
 
-
-  
   if (empty($_POST['sku'] )){
     echo '<div class="error text-danger" id="sku_err" >Please, provide sku</div>';
   }
-    if (empty($_POST['name'])){
-      echo '<div class="error text-danger " id="name_err" >Please, provide name</div>';
-    }
+  if (empty($_POST['name'])){
+    echo '<div class="error text-danger " id="name_err" >Please, provide name</div>';
+  }
 
-    if (empty($_POST['price'])){
-      echo '<div class="error text-danger" id="price_err" >Please, provide price</div>';
-    }
+  if (empty($_POST['price'])){
+    echo '<div class="error text-danger" id="price_err" >Please, provide price</div>';
+  }
   
+  if(!empty($this->sku) &&  !empty($this->name) && !empty($this->price)  && !empty($this->productType) &&  isset($this->size) &&  isset($this->height) && isset($this->width)  && isset($this->length)  && isset($this->weight)   ){
 
-  
+    $sku=$_POST['sku'];
+    $query="select sku from products where sku ='$sku'";
+    $result=$this->connect()->query($query);
 
-    if(!empty($this->sku) &&  !empty($this->name) && !empty($this->price)  && !empty($this->productType) &&  isset($this->size) &&  isset($this->height) && isset($this->width)  && isset($this->length)  && isset($this->weight)   ){
-
-    
-      
-
-        $query="insert into products(sku,name,price,size,productType,height,width,length,weight)
-          values('" . $this->getSku() . "','" . $this->getName() . "','" . $this->getPrice() . "','" . $this->getSize() . "','" . $this->getProductType() . "','" . $this->getHeight() . "','" . $this->getWidth() . "','" . $this->getLength() . "','" . $this->getWeight() . "')";
-          if($result=$this->connect()->query($query)){
-            echo '<div class="alert bg-success text-white">data success</div>';
-          }else{
-            return "error1";
-          }
-
-          
-      
+    if($result->num_rows>0){
+        echo '<div class="alert bg-danger text-white">Duplicate entry '.$this->getSku().' for SKU </div>';
     }else{
-      echo '<div class="alert bg-danger text-white">please fill all required field</div>';
-    }
+
+    $query="insert into products(sku,name,price,size,productType,height,width,length,weight)
+      values('" . $this->getSku() . "','" . $this->getName() . "','" . $this->getPrice() . "','" . $this->getSize() . "','" . $this->getProductType() . "','" . $this->getHeight() . "','" . $this->getWidth() . "','" . $this->getLength() . "','" . $this->getWeight() . "')";
+      if($result=$this->connect()->query($query)){
+        echo '<div class="alert bg-success text-white">data success</div>';
+      }else{
+        return "error1";
+      }
+      }
+
+
+  }else{
+    echo '<div class="alert bg-danger text-white">please fill all required field</div>';
+  }
   
   
   
@@ -144,11 +144,10 @@ public function displyRecord(){
 
 public function delete(){
 
-  if(isset($_POST['delete-produt-btn'])){
-    $hi=count($_POST['delete-checkbox']);
-    // echo $hi;
+  if(isset($_POST['delete-product-btn'])){
+    $dele=count($_POST['delete-checkbox']);
     $i=0;
-    while($i<$hi){
+    while($i<$dele){
       $k=$_POST['delete-checkbox'][$i];
       $query="delete from products where sku= '$k'";
       echo $query;

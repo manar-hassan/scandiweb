@@ -1,11 +1,11 @@
 <?php
 require_once('DB.php');
+
 abstract class con implements DB{
   private $serverName;
   private $dbUser;
   private $dbPassword;
   private $dbName;
-
   
   public function connect(){
     $this->serverName="localhost";
@@ -15,7 +15,6 @@ abstract class con implements DB{
 
     $con=new mysqli($this->serverName,$this->dbUser,$this->dbPassword,$this->dbName);
       return $con;
-    
   }
 }
 
